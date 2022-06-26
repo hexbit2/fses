@@ -1,6 +1,6 @@
 
-from flask import Flask
-from flask_login import LoginManager
+from flask import Flask, session
+from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -27,6 +27,14 @@ def create_app():
     @login_manager.user_loader
     def load_user(user_id):
         # since the user_id is just the primary key of our user table, use it in the query for the user
+        
         return User.query.get(int(user_id))
+
+    @app.before_request 
+    def before_request_callback(): 
+        print(session.keys())
+        print(session.get("_id", None))
+        print(session.get("_user_id", None))
+        print(current_user.is_authenticated)
 
     return app
