@@ -45,8 +45,8 @@ def sec():
 
     return new_user
 
-# def b():
-#     pass
+def b():
+    pass
     
 if __name__ == "__main__":
     fsapp.run(port=5010, debug=True)
