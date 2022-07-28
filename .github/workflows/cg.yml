@@ -67,7 +67,7 @@ jobs:
           echo "::set-output name=MFILES::$(
             for changed_file in ${{ steps.files.outputs.all }}; do
               echo -n ",./${changed_file}"
-            done
+            done | sed 's/^,//g'
           )"
         id: mfiles
         name: Modify File Paths
