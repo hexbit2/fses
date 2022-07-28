@@ -66,7 +66,7 @@ jobs:
       - run: >-
           echo "::set-output name=MFILES::$(
             for changed_file in ${{ steps.files.outputs.all }}; do
-              echo -n ",./${changed_file}" | grep -E '\.py$' || true
+              echo -n ",./${changed_file}" | grep -E '\.py$' | tr -d '\n'
             done | sed 's/^,//g'
           )"
         id: mfiles
