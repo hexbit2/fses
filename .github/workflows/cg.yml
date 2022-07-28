@@ -52,3 +52,6 @@ jobs:
         run: |
           python --version
           pip freeze
+
+      - name: Run flake8 check
+        run: flake8 --exclude=venv,__pycache__,.github
