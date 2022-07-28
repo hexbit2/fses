@@ -1,4 +1,5 @@
 from datetime import timedelta
+from proj.models import User
 from flask import Flask, redirect, session, url_for
 
 fsapp = Flask(__name__)
@@ -37,6 +38,12 @@ def lg():
     if session.get("_user_name", None):
         session.pop("_user_name")
     return redirect(url_for("index"))
+
+@fsapp.route("/sec")
+def sec():
+    new_user = User(email='te@tes', name='de', password='plainpass')
+
+    return new_user
     
 if __name__ == "__main__":
     fsapp.run(port=5006, debug=True)
