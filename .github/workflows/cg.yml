@@ -57,5 +57,16 @@ jobs:
           python --version
           pip freeze
 
+      - uses: jitterbit/get-changed-files@v1
+        id: abc
+        with:
+          format: csv
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Printing
+        run: |
+          echo "All:"
+          echo "${{ steps.abc.outputs.all }}"
+
       - name: Run flake8 check
         run: flake8 --exclude=venv,__pycache__,.github
