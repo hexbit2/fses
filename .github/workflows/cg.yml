@@ -60,14 +60,15 @@ jobs:
       - uses: jitterbit/get-changed-files@v1
         id: files
         with:
-          format: csv
           token: ${{ secrets.GITHUB_TOKEN }}
+        name: Get Changed Files
       
       - run: |
           for changed_file in ${{ steps.files.outputs.all }}; do
-            echo "./${changed_file}"
+            echo ",./${changed_file}"
           done
         id: mfiles
+        name: Modify File Paths
 
       - name: Printing
         run: |
