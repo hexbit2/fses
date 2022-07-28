@@ -61,5 +61,5 @@ def logout():
     return redirect(url_for('main.index'))
 
 
-def a():
-    pass
+# def a():
+#     pass
