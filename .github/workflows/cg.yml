@@ -3,7 +3,9 @@ name: CodeGuru Review
 on:
   pull_request:
     branches: [master]
-  
+  push:
+    branches: [master]
+
   schedule:
   - cron: '*/60 * * * *'
 
@@ -34,4 +36,19 @@ jobs:
         with:
           sarif_file: codeguru-results.sarif.json
 
+  pep_check:
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9.5'
+
+      - name: Install flake8
+        run: pip install flake8
+
+      - name: Debug
+        run: |
+          python --version
+          pip freeze
