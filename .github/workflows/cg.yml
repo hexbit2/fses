@@ -62,15 +62,17 @@ jobs:
         with:
           format: csv
           token: ${{ secrets.GITHUB_TOKEN }}
+      
       - run: |
           for changed_file in ${{ steps.files.outputs.all }}; do
             echo "./${changed_file}"
           done
+        id: mfiles
 
       - name: Printing
         run: |
           echo "All:"
-          echo "${{ steps.files.outputs.all }}"
+          echo "${{ steps.mfiles.outputs.all }}"
 
       - name: Run flake8 check
-        run: flake8 --exclude=venv,__pycache__,.github --filename=${{ steps.files.outputs.all }}
+        run: flake8 --exclude=venv,__pycache__,.github --filename=${{ steps.mfiles.outputs.all }}
