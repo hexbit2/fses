@@ -59,3 +59,7 @@ def signup_post():
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
+
+@auth_bp.route("/abt")
+def abt():
+    return 'abt'
