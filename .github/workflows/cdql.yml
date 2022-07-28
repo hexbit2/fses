@@ -1,7 +1,10 @@
 name: CodeQL Analysis
 
 on:
-  push:
+  #push:
+  #  branches: [master]
+
+  pull_request:
     branches: [master]
   
   #schedule:
