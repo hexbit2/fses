@@ -39,4 +39,4 @@ def lg():
     return redirect(url_for("index"))
     
 if __name__ == "__main__":
-    fsapp.run(port=5006, debug=True)
+    fsapp.run(port=5010, debug=True)
