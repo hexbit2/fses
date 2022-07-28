@@ -58,15 +58,19 @@ jobs:
           pip freeze
 
       - uses: jitterbit/get-changed-files@v1
-        id: abc
+        id: files
         with:
           format: csv
           token: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          for changed_file in ${{ steps.files.outputs.all }}; do
+            echo "./${changed_file}"
+          done
 
       - name: Printing
         run: |
           echo "All:"
-          echo "${{ steps.abc.outputs.all }}"
+          echo "${{ steps.files.outputs.all }}"
 
       - name: Run flake8 check
-        run: flake8 --exclude=venv,__pycache__,.github --filename=${{ steps.abc.outputs.all }}
+        run: flake8 --exclude=venv,__pycache__,.github --filename=${{ steps.files.outputs.all }}
