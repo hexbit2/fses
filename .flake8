@@ -1,5 +1,6 @@
 [flake8]
 select =
     E302,
+    E305,
     W,
     F
