@@ -7,11 +7,15 @@ on:
   #push:
   #  branches: [master]
 
-  #schedule:
-  #- cron: '*/60 * * * *'
+  schedule:
+  - cron: '0 8 * * *' # Will run every day at 8 AM UTC i.e 4 AM EDT
 
 jobs:
   cg_review:
+    # When triggred due to PR, it will only scan the changed files & the report will be available in PR.
+    # When triggred as part of the schedule, then it will be available under Security tab in GitHub.
+    # The idea here is that this Job will run, when triggred by both schedule & PR
+
     runs-on: ubuntu-latest
 
     steps:
@@ -38,6 +42,8 @@ jobs:
           sarif_file: codeguru-results.sarif.json
 
   pep_check:
+    # When triggred by PR, it should run for only changed files.
+    # When triigred by schedule it should run for all the *.py files
     runs-on: ubuntu-latest
 
     steps:
@@ -58,6 +64,7 @@ jobs:
           pip freeze
 
       - uses: jitterbit/get-changed-files@v1
+        if: ${{ github.event_name != 'schedule' }}
         id: files
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -70,12 +77,20 @@ jobs:
             done | sed 's/^,//g'
           )"
         id: mfiles
+        if: ${{ github.event_name != 'schedule' }}
         name: Modify File Paths
 
       - name: Printing
+        if: ${{ github.event_name != 'schedule' }}
         run: |
           echo "All:"
           echo "${{ steps.mfiles.outputs.MFILES }}"
 
-      - name: Run flake8 check
+      - name: Run flake8 check - Non Schedule
+        if: ${{ github.event_name != 'schedule' }}
         run: flake8 --exclude=venv,__pycache__,.github --filename=${{ steps.mfiles.outputs.MFILES }}
+      
+      - name: Run flake8 check - Schedule
+        if: ${{ github.event_name == 'schedule' }}
+        run: flake8 --exclude=venv,__pycache__
+  
