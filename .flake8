@@ -1,0 +1,5 @@
+[flake8]
+select =
+    E302,
+    W,
+    F
