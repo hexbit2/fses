@@ -8,13 +8,6 @@ fsapp.config["SECRET_KEY"] = "sec"
 fsapp.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=2)
 fsapp.config["SESSION_REFRESH_EACH_REQUEST"] = False
 
-"""
-@fsapp.before_request
-def before_request():
-    session.permanent = True
-    session.modified = True
-"""
-
 @fsapp.route("/")
 def index():
     print(session.keys())
