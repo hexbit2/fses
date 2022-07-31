@@ -100,11 +100,15 @@ jobs:
 
       - name: Create a Branch for PR
         id: brname
-        if: ${{ steps.autopep8.outcome == 'success' && always() }}
+        if: ${{  github.event_name != 'schedule' && steps.autopep8.outcome == 'success' && always() }}
         run: echo ::set-output name=branch-name::"${{ github.head_ref }}-autopep8-fix-$(date +%s)"
+
+      - name: Print Branch
+        if: ${{ github.event_name != 'schedule' && steps.autopep8.outcome == 'success' && always() }}
+        run: echo "${{ steps.brname.outputs.branch-name }}"
         
       - name: Create Pull Request
-        if: ${{ steps.brname.outcome == 'success' && steps.autopep8.outcome == 'success' && always() }}
+        if: ${{ github.event_name != 'schedule' && steps.brname.outcome == 'success' && steps.autopep8.outcome == 'success' && always() }}
         uses: peter-evans/create-pull-request@v3
         with:
           commit-message: autopep8 action fixes
