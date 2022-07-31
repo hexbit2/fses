@@ -88,12 +88,12 @@ jobs:
 
       - name: Run flake8 check - Non Schedule
         id: flake8
-        if: ${{ github.event_name != 'schedule' && steps.files.outputs.all != null }}
+        if: ${{ github.event_name != 'schedule' && steps.mfiles.outputs.MFILES != null }}
         run: flake8 --exclude=venv,__pycache__,.github --filename=${{ steps.mfiles.outputs.MFILES }}
 
       - name: In place autopep8
         id: autopep8
-        if: ${{ github.event_name != 'schedule' && steps.flake8.outcome == 'failure' && always() }}
+        if: ${{ github.event_name != 'schedule' && steps.flake8.outcome == 'failure' && steps.mfiles.outputs.MFILES != null && always() }}
         uses: peter-evans/autopep8@v1
         with:
           args: --in-place ${{ steps.files.outputs.all }}
