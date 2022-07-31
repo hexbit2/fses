@@ -78,13 +78,24 @@ jobs:
           )"
         id: mfiles
         if: ${{ github.event_name != 'schedule' }}
-        name: Modify File Paths
+        name: Modify File Paths With Comma
+
+      - run: >-
+          echo "::set-output name=MFILES_SPACE::$(
+            for changed_file in ${{ steps.files.outputs.all }}; do
+              echo -n " ${changed_file}" | grep -E '\.py$' | tr -d '\n'
+            done | sed 's/^ //g'
+          )"
+        id: mfiles_space
+        if: ${{ github.event_name != 'schedule' }}
+        name: Modify File Paths With Space
 
       - name: Printing
         if: ${{ github.event_name != 'schedule' }}
         run: |
           echo "All:"
           echo "${{ steps.mfiles.outputs.MFILES }}"
+          echo "${{ steps.mfiles_space.outputs.MFILES_SPACE }}"
 
       - name: Run flake8 check - Non Schedule
         id: flake8
@@ -96,7 +107,7 @@ jobs:
         if: ${{ github.event_name != 'schedule' && steps.flake8.outcome == 'failure' && steps.mfiles.outputs.MFILES != null && always() }}
         uses: peter-evans/autopep8@v1
         with:
-          args: --in-place ${{ steps.files.outputs.all }}
+          args: --in-place ${{ steps.mfiles_space.outputs.MFILES_SPACE }}
 
       - name: Create a Branch for PR
         id: brname
