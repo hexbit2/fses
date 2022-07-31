@@ -76,12 +76,17 @@ jobs:
               echo -n ",./${changed_file}" | grep -E '\.py$' | tr -d '\n'
             done | sed 's/^,//g'
           )"
+        id: mfiles
+        if: ${{ github.event_name != 'schedule' }}
+        name: Modify File Paths
+
+      - run: >-
           echo "::set-output name=MFILES_SPACE::$(
             for changed_file in ${{ steps.files.outputs.all }}; do
-              echo -n "${changed_file}" | grep -E '\.py$' | tr -d '\n'
+              echo -n "${changed_file} " | grep -E '\.py$' | tr -d '\n'
             done
           )"
-        id: mfiles
+        id: mfiles_space
         if: ${{ github.event_name != 'schedule' }}
         name: Modify File Paths
 
@@ -90,7 +95,7 @@ jobs:
         run: |
           echo "All:"
           echo "${{ steps.mfiles.outputs.MFILES }}"
-          echo "${{ steps.mfiles.outputs.MFILES_SPACE }}"
+          echo "${{ steps.mfiles_space.outputs.MFILES_SPACE }}"
 
       - name: Run flake8 check - Non Schedule
         id: flake8
