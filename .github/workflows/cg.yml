@@ -117,7 +117,7 @@ jobs:
           labels: autopep8, automated pr
           branch: ${{ steps.brname.outputs.branch-name }}
           base: ${{ github.head_ref }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
       - name: Run flake8 check - Schedule
         if: ${{ github.event_name == 'schedule' }}
