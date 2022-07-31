@@ -78,7 +78,7 @@ jobs:
           )"
         id: mfiles
         if: ${{ github.event_name != 'schedule' }}
-        name: Modify File Paths
+        name: Modify File Paths With Comma
 
       - run: >-
           echo "::set-output name=MFILES_SPACE::$(
@@ -88,7 +88,7 @@ jobs:
           )"
         id: mfiles_space
         if: ${{ github.event_name != 'schedule' }}
-        name: Modify File Paths
+        name: Modify File Paths With Space
 
       - name: Printing
         if: ${{ github.event_name != 'schedule' }}
