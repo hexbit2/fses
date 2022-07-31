@@ -54,7 +54,7 @@ def signup_post():
 
     return redirect(url_for('auth.login'))
 
-
+# A cooment
 @auth_bp.route("/logout")
 @login_required
 def logout():
