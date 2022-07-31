@@ -88,7 +88,7 @@ jobs:
 
       - name: Run flake8 check - Non Schedule
         id: flake8
-        if: ${{ github.event_name != 'schedule' && steps.files.outputs.all }}
+        if: ${{ github.event_name != 'schedule' && steps.files.outputs.all != null }}
         run: flake8 --exclude=venv,__pycache__,.github --filename=${{ steps.mfiles.outputs.MFILES }}
 
       - name: In place autopep8
