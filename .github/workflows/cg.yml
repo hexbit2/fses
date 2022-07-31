@@ -55,8 +55,8 @@ jobs:
         with:
           python-version: '3.9.5'
 
-      - name: Install flake8
-        run: pip install flake8
+      - name: Install flake8 & autopep8
+        run: pip install flake8 autopep8
 
       - name: Debug
         run: |
@@ -88,6 +88,7 @@ jobs:
 
       - name: Run flake8 check - Non Schedule
         id: flake8
+        continue-on-error: true
         if: ${{ github.event_name != 'schedule' }}
         run: flake8 --exclude=venv,__pycache__,.github --filename=${{ steps.mfiles.outputs.MFILES }}
 
