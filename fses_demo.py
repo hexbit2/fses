@@ -8,6 +8,7 @@ fsapp.config["SECRET_KEY"] = "sec"
 fsapp.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=2)
 fsapp.config["SESSION_REFRESH_EACH_REQUEST"] = False
 
+# A comment
 @fsapp.route("/")
 def index():
     print(session.keys())
@@ -40,6 +41,7 @@ def sec():
 
 def a():
     return ''
+
 
 if __name__ == "__main__":
     fsapp.run(port=5010, debug=True)

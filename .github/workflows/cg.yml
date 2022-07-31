@@ -55,8 +55,8 @@ jobs:
         with:
           python-version: '3.9.5'
 
-      - name: Install flake8
-        run: pip install flake8
+      - name: Install flake8 & autopep8
+        run: pip install flake8 autopep8
 
       - name: Debug
         run: |
@@ -93,18 +93,22 @@ jobs:
 
       - name: In place autopep8
         id: autopep8
-        if: ${{ github.event_name != 'schedule' && steps.flake8.outputs.exit-code == 1 }}
+        if: ${{ github.event_name != 'schedule' && steps.flake8.outcome == 'failure' && always() }}
         uses: peter-evans/autopep8@v1
         with:
           args: --in-place ${{ steps.files.outputs.all }}
 
       - name: Create a Branch for PR
         id: brname
-        if: ${{ steps.autopep8.outcome == 'success' }}
+        if: ${{  github.event_name != 'schedule' && steps.autopep8.outcome == 'success' && always() }}
         run: echo ::set-output name=branch-name::"${{ github.head_ref }}-autopep8-fix-$(date +%s)"
+
+      - name: Print Branch
+        if: ${{ github.event_name != 'schedule' && steps.autopep8.outcome == 'success' && always() }}
+        run: echo "${{ steps.brname.outputs.branch-name }}"
         
       - name: Create Pull Request
-        if: ${{ steps.brname.outcome == 'success' && steps.autopep8.outcome == 'success' }}
+        if: ${{ github.event_name != 'schedule' && steps.brname.outcome == 'success' && steps.autopep8.outcome == 'success' && always() }}
         uses: peter-evans/create-pull-request@v3
         with:
           commit-message: autopep8 action fixes
@@ -112,6 +116,8 @@ jobs:
           body: This is an auto-generated PR with fixes by autopep8.
           labels: autopep8, automated pr
           branch: ${{ steps.brname.outputs.branch-name }}
+          base: ${{ github.head_ref }}
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
       - name: Run flake8 check - Schedule
         if: ${{ github.event_name == 'schedule' }}
