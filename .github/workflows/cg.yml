@@ -107,7 +107,7 @@ jobs:
         if: ${{ github.event_name != 'schedule' && steps.flake8.outcome == 'failure' && steps.mfiles.outputs.MFILES != null && always() }}
         uses: peter-evans/autopep8@v1
         with:
-          args: --in-place ${{ steps.files.outputs.all }}
+          args: --in-place ${{ steps.mfiles_space.outputs.MFILES_SPACE }}
 
       - name: Create a Branch for PR
         id: brname
