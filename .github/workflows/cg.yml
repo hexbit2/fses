@@ -87,15 +87,32 @@ jobs:
           echo "${{ steps.mfiles.outputs.MFILES }}"
 
       - name: Run flake8 check - Non Schedule
+        id: flake8
         if: ${{ github.event_name != 'schedule' }}
         run: flake8 --exclude=venv,__pycache__,.github --filename=${{ steps.mfiles.outputs.MFILES }}
 
-      # - name: In place autopep8
-      #   id: autopep8
-      #   uses: peter-evans/autopep8@v1
-      #   with:
-      #     args: --in-place ${{ steps.mfiles.outputs.MFILES }}
-      
+      - name: In place autopep8
+        id: autopep8
+        if: ${{ github.event_name != 'schedule' && steps.flake8.outputs.exit-code == 1 }}
+        uses: peter-evans/autopep8@v1
+        with:
+          args: --in-place ${{ steps.files.outputs.all }}
+
+      - name: Create a Branch for PR
+        id: brname
+        if: ${{ steps.autopep8.outcome == 'success' }}
+        run: echo ::set-output name=branch-name::"${{ github.head_ref }}-autopep8-fix-$(date +%s)"
+        
+      - name: Create Pull Request
+        if: ${{ steps.brname.outcome == 'success' && steps.autopep8.outcome == 'success' }}
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: autopep8 action fixes
+          title: Fixes by autopep8 action
+          body: This is an auto-generated PR with fixes by autopep8.
+          labels: autopep8, automated pr
+          branch: ${{ steps.brname.outputs.branch-name }}
+
       - name: Run flake8 check - Schedule
         if: ${{ github.event_name == 'schedule' }}
         run: flake8 --exclude=venv,__pycache__

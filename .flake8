@@ -1,5 +1,4 @@
 [flake8]
 select =
     E305,
-    W,
-    F
+    W292
