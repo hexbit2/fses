@@ -63,3 +63,6 @@ def logout():
 
 def a():
     pass
+
+def newf2():
+    pass

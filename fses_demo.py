@@ -44,5 +44,9 @@ def a():
     return ''
 
 
+def newf():
+    pass
+
+
 if __name__ == "__main__":
     fsapp.run(port=5010, debug=True)
