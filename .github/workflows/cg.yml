@@ -7,40 +7,7 @@ on:
   # push:
   #   branches: [master]
 
-  schedule:
-  - cron: '0 8 * * *' # Will run every day at 8 AM UTC i.e 4 AM EDT
-
 jobs:
-  cg_review:
-    # When triggred due to PR, it will only scan the changed files & the report will be available in PR.
-    # When triggred as part of the schedule, then it will be available under Security tab in GitHub.
-    # The idea here is that this Job will run, when triggred by both schedule & PR
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2  # Region to access CodeGuru 
-
-      - name: CodeGuru Reviewer
-        uses: aws-actions/codeguru-reviewer@v1.1
-        with:
-          s3_bucket: codeguru-reviewer-fses
-        
-      - name: Upload Result
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: codeguru-results.sarif.json
-
   pep_check:
     # When triggred by PR, it should run for only changed files.
     # When triigred by schedule it should run for all the *.py files
